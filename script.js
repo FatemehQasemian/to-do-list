@@ -15,19 +15,49 @@ function addItem(e) {
   } else {
     invalidInput.innerText = "";
   }
+  addItemToDOM(newItem);
+  addItemToStorage(newItem);
+  inputItem.value = "";
+  checkUI();
+}
+
+function addItemToDOM(newItem) {
   const li = document.createElement("li");
   li.className = "list-item";
   li.textContent = newItem;
   const icon = createIcon("bi bi-x text-danger");
   li.appendChild(icon);
   listItems.appendChild(li);
-  inputItem.value = "";
+}
+
+function addItemToStorage(newItem) {
+  let itemsFromStorage = getItemFromStorage();
+  itemsFromStorage.push(newItem);
+  localStorage.setItem("items", JSON.stringify(itemsFromStorage));
+}
+
+function displayItems() {
+  let itemsFromStorage = getItemFromStorage();
+  itemsFromStorage.forEach((item) => {
+    addItemToDOM(item);
+  });
   checkUI();
+}
+
+function getItemFromStorage() {
+  let itemsFromStorage;
+  if (localStorage.getItem("items") === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem("items"));
+  }
+  return itemsFromStorage;
 }
 
 function onClickItem(e) {
   if (e.target.classList.contains("bi-x")) {
     e.target.parentElement.remove();
+    removeItemFromStorage(e.target.parentElement.textContent);
   }
   checkUI();
 }
@@ -42,6 +72,8 @@ function clearAll(e) {
   listItems.innerText = "";
   checkUI();
 }
+
+function removeItemFromStorage() {}
 
 function checkUI() {
   const len = listItems.querySelectorAll("li").length;
@@ -74,3 +106,4 @@ formItems.addEventListener("submit", addItem);
 listItems.addEventListener("click", onClickItem);
 clearAllBtn.addEventListener("click", clearAll);
 itemFilter.addEventListener("input", filterItems);
+document.addEventListener("DOMContentLoaded", displayItems);
