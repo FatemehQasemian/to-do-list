@@ -55,7 +55,17 @@ function checkUI() {
 }
 
 function filterItems(e) {
-  console.log(e.target.value.toLowerCase());
+  const items = listItems.querySelectorAll("li");
+  const filterText = e.target.value.toLowerCase();
+  let i = 0;
+  items.forEach((item) => {
+    const itemName = item.firstChild.textContent.toLowerCase();
+    if (itemName.indexOf(filterText) !== -1) {
+      item.style.display = "flex";
+    } else {
+      item.style.display = "none";
+    }
+  });
 }
 
 // Event Listener
