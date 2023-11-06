@@ -5,7 +5,7 @@ const listItems = document.getElementById("item-list");
 const clearAllBtn = document.getElementById("items-clear");
 const itemFilter = document.getElementById("filter");
 const addItemBtn = formItems.querySelector("button");
-// const btn = document.getElementById("button");
+let isEditMode = false;
 
 function getCurrentDateAndTime() {
   let date = new Date().toDateString();
@@ -24,10 +24,28 @@ function addItem(e) {
   } else {
     invalidInput.innerText = "";
   }
+  if (isEditMode) {
+    const itemToEdit = listItems.querySelector(".edit-mode");
+    removeItemFromStorage(itemToEdit.textContent);
+    itemToEdit.remove();
+    addItemBtn.innerHTML = "<i class='bi bi-plus'></i> Add Task";
+    addItemBtn.classList.replace("btn-primary", "btn-dark");
+    isEditMode = false;
+  }
+  if (checkIfItemExists(newItem)) {
+    invalidInput.innerText = "This task already exists!";
+    return;
+  }
+
   addItemToDOM(newItem);
   addItemToStorage(newItem);
   inputItem.value = "";
   checkUI();
+}
+
+function checkIfItemExists(newItem) {
+  const itemsFromStorge = getItemFromStorage();
+  return itemsFromStorge.includes(newItem);
 }
 
 function addItemToDOM(newItem) {
@@ -79,6 +97,7 @@ function createIcon(classes) {
 }
 
 function setItemToEdit(item) {
+  isEditMode = true;
   listItems
     .querySelectorAll("li")
     .forEach((item) => item.classList.remove("edit-mode"));
