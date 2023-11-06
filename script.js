@@ -4,7 +4,16 @@ const invalidInput = document.getElementById("input-invalid");
 const listItems = document.getElementById("item-list");
 const clearAllBtn = document.getElementById("items-clear");
 const itemFilter = document.getElementById("filter");
-// const btn = document.getElementById("btn");
+const addItemBtn = formItems.querySelector("button");
+// const btn = document.getElementById("button");
+
+function getCurrentDateAndTime() {
+  let date = new Date().toDateString();
+  document.getElementById("date").innerText = date.substring(
+    0,
+    date.length - 4 - 1
+  );
+}
 
 function addItem(e) {
   e.preventDefault();
@@ -56,8 +65,9 @@ function getItemFromStorage() {
 
 function onClickItem(e) {
   if (e.target.classList.contains("bi-x")) {
-    e.target.parentElement.remove();
-    removeItemFromStorage(e.target.parentElement.textContent);
+    removeItem(e.target.parentElement);
+  } else {
+    setItemToEdit(e.target);
   }
   checkUI();
 }
@@ -68,12 +78,39 @@ function createIcon(classes) {
   return icon;
 }
 
+function setItemToEdit(item) {
+  listItems
+    .querySelectorAll("li")
+    .forEach((item) => item.classList.remove("edit-mode"));
+  item.classList.add("edit-mode");
+  inputItem.value = item.textContent;
+  addItemBtn.innerHTML = "<i class='bi bi-pencil'></i> Edit Item";
+  addItemBtn.classList.replace("btn-dark", "btn-primary");
+  // addItemBtn.style.backgroundColor = "#007bff";
+}
+
+function removeItem(item) {
+  item.remove();
+  removeItemFromStorage(item.textContent);
+}
+
 function clearAll(e) {
   listItems.innerText = "";
+  localStorage.removeItem("items");
   checkUI();
 }
 
-function removeItemFromStorage() {}
+function removeItemFromStorage(item) {
+  let itemsFromStorage = getItemFromStorage();
+  let temp = [];
+  for (let index = 0, i = 0; index < itemsFromStorage.length; index++) {
+    if (itemsFromStorage[index] != item) {
+      temp[i] = itemsFromStorage[index];
+      i++;
+    }
+  }
+  localStorage.setItem("items", JSON.stringify(temp));
+}
 
 function checkUI() {
   const len = listItems.querySelectorAll("li").length;
@@ -102,6 +139,7 @@ function filterItems(e) {
 
 // Event Listener
 checkUI();
+getCurrentDateAndTime();
 formItems.addEventListener("submit", addItem);
 listItems.addEventListener("click", onClickItem);
 clearAllBtn.addEventListener("click", clearAll);

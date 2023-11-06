@@ -26,13 +26,21 @@
           <section>
             <form id="form-items" class="my-4">
               <div class="mb-3 mt-3">
-                <label for="item-input" class="form-label">Enter Item</label>
-                <input type="text" id="item-input" class="form-control" />
+                <label for="item-input" class="form-label fw-bold fs-5">
+                  Today
+                </label>
+                <small id="date" class="text-secondary"></small>
+                <input
+                  type="text"
+                  id="item-input"
+                  class="form-control"
+                  placeholder="Task name"
+                />
                 <div id="input-invalid" class="form-text text-danger"></div>
               </div>
               <button type="submit" id="btn" class="btn btn-sm btn-dark">
                 <i class="bi bi-plus"></i>
-                Add Item
+                Add Task
               </button>
             </form>
           </section>
