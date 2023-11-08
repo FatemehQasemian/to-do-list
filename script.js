@@ -105,6 +105,7 @@ function setItemToEdit(item) {
   inputItem.value = item.textContent;
   addItemBtn.innerHTML = "<i class='bi bi-pencil'></i> Edit Item";
   addItemBtn.classList.replace("btn-dark", "btn-primary");
+  checkUI();
   // addItemBtn.style.backgroundColor = "#007bff";
 }
 
@@ -136,6 +137,11 @@ function checkUI() {
   if (len == 0) {
     clearAllBtn.style.display = "none";
     itemFilter.style.display = "none";
+    if (isEditMode) {
+      addItemBtn.innerHTML = "<i class='bi bi-plus'></i> Add Task";
+      addItemBtn.classList.replace("btn-primary", "btn-dark");
+      isEditMode = false;
+    }
   } else {
     clearAllBtn.style.display = "block";
     itemFilter.style.display = "block";
